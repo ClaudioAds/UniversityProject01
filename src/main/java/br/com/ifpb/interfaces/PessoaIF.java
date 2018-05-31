@@ -3,9 +3,10 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package br.com.ifpb.controll;
+package br.com.ifpb.interfaces;
 
 import br.com.ifpb.model.Pessoa;
+import java.sql.SQLDataException;
 import java.util.List;
 
 /**
@@ -14,11 +15,13 @@ import java.util.List;
  */
 public interface PessoaIF {
  
-    public void adicionar(Pessoa pessoa);
+    public void adicionar(Pessoa pessoa) throws SQLDataException;
     
-    public void remover(Pessoa pessoa);
+    public void remover(Pessoa pessoa) throws SQLDataException;
     
-    public void alterar(Pessoa pessoa);
+    public void alterar(Pessoa pessoa) throws SQLDataException;
     
     public List<Pessoa> listar();
+    
+    public List<Pessoa> buscaPorDesc(String desc) throws SQLDataException;
 }

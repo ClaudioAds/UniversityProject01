@@ -5,11 +5,13 @@
  */
 package br.com.ifpb.dao;
 
-import br.com.ifpb.controll.PessoaIF;
+import br.com.ifpb.connection.ConexaoMySql;
+import br.com.ifpb.interfaces.PessoaIF;
 import br.com.ifpb.model.Pessoa;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLDataException;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
@@ -21,27 +23,27 @@ import javax.swing.JOptionPane;
  *
  * @author claudio
  */
-public class PessoaDao implements PessoaIF {
+public class PessoaDaoMySql implements PessoaIF {
 
     Connection con;
 
-    public PessoaDao() {
-        con = Conexao.getConnection();
+    public PessoaDaoMySql() {
+        con = ConexaoMySql.getConnection();
     }
 
     @Override
-    public void adicionar(Pessoa pessoa) {
-
+    public void adicionar(Pessoa pessoa) throws SQLDataException {
         PreparedStatement stmt = null;
 
         try {
-            stmt = con.prepareStatement("INSERT INTO pessoa (nome, cpf, idade, altura, peso, imc)VALUES(?, ?, ?, ?, ?, ?)");
+            stmt = con.prepareStatement("INSERT INTO Pessoa (nome, cpf, idade, altura, peso, imc, status)VALUES(?, ?, ?, ?, ?, ?, ?)");
             stmt.setString(1, pessoa.getNome());
             stmt.setString(2, pessoa.getCpf());
             stmt.setInt(3, pessoa.getIdade());
             stmt.setFloat(4, pessoa.getAltura());
             stmt.setFloat(5, pessoa.getPeso());
             stmt.setFloat(6, pessoa.calculaImc());
+            stmt.setString(7, pessoa.getStatus());
 
             stmt.executeUpdate();
             JOptionPane.showMessageDialog(null, "Salvo com sucesso!");
@@ -49,16 +51,17 @@ public class PessoaDao implements PessoaIF {
         } catch (SQLException ex) {
             System.out.println(ex);
         } finally {
-            Conexao.closeConnection(con, stmt);
+            ConexaoMySql.closeConnection(con, stmt);
         }
     }
 
     @Override
-    public void remover(Pessoa pessoa) {
+    public void remover(Pessoa pessoa) throws SQLDataException {
+
         PreparedStatement stmt = null;
 
         try {
-            stmt = con.prepareStatement("DELETE FROM pessoa WHERE cpf = ?");
+            stmt = con.prepareStatement("DELETE FROM Pessoa WHERE cpf = ?");
             stmt.setString(1, pessoa.getCpf());
 
             stmt.executeUpdate();
@@ -67,23 +70,23 @@ public class PessoaDao implements PessoaIF {
         } catch (SQLException ex) {
             JOptionPane.showMessageDialog(null, "Erro ao excluir: " + ex);
         } finally {
-            Conexao.closeConnection(con, stmt);
+            ConexaoMySql.closeConnection(con, stmt);
         }
     }
 
     @Override
-    public void alterar(Pessoa pessoa) {
+    public void alterar(Pessoa pessoa) throws SQLDataException {
 
         PreparedStatement stmt = null;
+
         try {
-            stmt = con.prepareStatement("UPDATE INTO pessoa SET nome = ?, cpf = ?, idade = ?, altura = ?, peso = ?, imc = ? WHERE cpf = ?");
+            stmt = con.prepareStatement("UPDATE INTO Pessoa SET nome = ?, cpf = ?, idade = ?, altura = ?, peso = ? WHERE cpf = ?");
 
             stmt.setString(1, pessoa.getNome());
             stmt.setString(2, pessoa.getCpf());
             stmt.setInt(3, pessoa.getIdade());
             stmt.setFloat(4, pessoa.getAltura());
             stmt.setFloat(5, pessoa.getPeso());
-            stmt.setFloat(5, pessoa.getImc());
 
             stmt.executeUpdate();
 
@@ -91,8 +94,7 @@ public class PessoaDao implements PessoaIF {
         } catch (SQLException ex) {
             JOptionPane.showMessageDialog(null, "Erro ao atualizar: " + ex);
         } finally {
-            Conexao.closeConnection(con, stmt);
-
+            ConexaoMySql.closeConnection(con, stmt);
         }
     }
 
@@ -104,7 +106,7 @@ public class PessoaDao implements PessoaIF {
         List<Pessoa> pessoas = new ArrayList<>();
 
         try {
-            stmt = con.prepareStatement("SELECT * FROM pessoa");
+            stmt = con.prepareStatement("SELECT * FROM Pessoa order by nome");
             rs = stmt.executeQuery();
 
             while (rs.next()) {
@@ -117,20 +119,22 @@ public class PessoaDao implements PessoaIF {
                 pessoa.setAltura(rs.getFloat("altura"));
                 pessoa.setPeso(rs.getFloat("peso"));
                 pessoa.setImc(rs.getFloat("imc"));
+                pessoa.setStatus(rs.getString("status"));
 
                 pessoas.add(pessoa);
             }
 
         } catch (SQLException ex) {
-            Logger.getLogger(PessoaDao.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(PessoaDaoPG.class.getName()).log(Level.SEVERE, null, ex);
         } finally {
-            Conexao.closeConnection(con, stmt, rs);
+            ConexaoMySql.closeConnection(con, stmt, rs);
         }
 
         return pessoas;
     }
-    
-    public List<Pessoa> buscaPorDesc(String desc) {
+
+    @Override
+    public List<Pessoa> buscaPorDesc(String desc) throws SQLDataException {
 
         PreparedStatement stmt = null;
         ResultSet rs = null;
@@ -138,9 +142,9 @@ public class PessoaDao implements PessoaIF {
         List<Pessoa> pessoas = new ArrayList<>();
 
         try {
-            stmt = con.prepareStatement("SELECT * FROM pessoa WHERE nome LIKE ?");
-            stmt.setString(1, "%"+desc+"%");
-            
+            stmt = con.prepareStatement("SELECT * FROM Pessoa WHERE nome LIKE ?");
+            stmt.setString(1, "%" + desc + "%");
+
             rs = stmt.executeQuery();
 
             while (rs.next()) {
@@ -153,18 +157,18 @@ public class PessoaDao implements PessoaIF {
                 pessoa.setAltura(rs.getFloat("altura"));
                 pessoa.setPeso(rs.getFloat("peso"));
                 pessoa.setImc(rs.getFloat("imc"));
-                
+                pessoa.setStatus(rs.getString("status"));
+
                 pessoas.add(pessoa);
             }
 
         } catch (SQLException ex) {
-            Logger.getLogger(PessoaDao.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(PessoaDaoPG.class.getName()).log(Level.SEVERE, null, ex);
         } finally {
-            Conexao.closeConnection(con, stmt, rs);
+            ConexaoMySql.closeConnection(con, stmt, rs);
         }
 
         return pessoas;
-
     }
 
 }

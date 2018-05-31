@@ -1,9 +1,5 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-package br.com.ifpb.dao;
+
+package br.com.ifpb.connection;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -17,13 +13,13 @@ import java.util.logging.Logger;
  *
  * @author claudio
  */
-public class Conexao {
-    
-    private static final String URL = "jdbc:postgresql://localhost:5432/imc-padroes";
-     private static final String USER = "postgres";
-    private static final String SENHA = "claudio";
+public class ConexaoMySql {
 
-     public static Connection getConnection() {
+    private static final String URL = "jdbc:mysql://localhost:3306/imc_padroes";
+    private static final String USER = "root";
+    private static final String SENHA = "companheirismo";
+
+    public static Connection getConnection() {
         try {
             System.out.println("Conexão Realizada com Sucesso!");
             return DriverManager.getConnection(URL, USER, SENHA);
@@ -40,7 +36,7 @@ public class Conexao {
                 con.close();
             }
         } catch (SQLException ex) {
-            Logger.getLogger(Conexao.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(ConexaoMySql.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
@@ -55,7 +51,7 @@ public class Conexao {
             }
 
         } catch (SQLException ex) {
-            Logger.getLogger(Conexao.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(ConexaoMySql.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
@@ -70,8 +66,8 @@ public class Conexao {
             }
 
         } catch (SQLException ex) {
-            Logger.getLogger(Conexao.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(ConexaoMySql.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-    
+
 }

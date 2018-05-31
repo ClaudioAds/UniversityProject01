@@ -1,0 +1,4 @@
+Nome: Antonio, CPF: 123456789, Idade: 30, Altura: 1.7, Peso: 72.0, IMC = 24.913494, Status: Você está acima do Peso!;
+Nome: Antonio, CPF: 123456789, Idade: 30, Altura: 1.7, Peso: 72.0, IMC = 24.913494, Status: Você está acima do Peso!;
+Nome: Antonio, CPF: 123456789, Idade: 30, Altura: 1.7, Peso: 72.0, IMC = 24.913494, Status: Você está acima do Peso!;
+Nome: Antonio, CPF: 123456789, Idade: 30, Altura: 1.7, Peso: 72.0, IMC = 24.913494, Status: Você está acima do Peso!;

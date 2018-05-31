@@ -11,12 +11,12 @@ import br.com.ifpb.controll.CalculaImc;
  *
  * @author claudio
  */
-public class JanelaCalculaImc extends javax.swing.JFrame {
+public class JanelaCalculaImcEspanha extends javax.swing.JFrame {
 
     /**
      * Creates new form JanelaPrincipal
      */
-    public JanelaCalculaImc() {
+    public JanelaCalculaImcEspanha() {
         initComponents();
         setLocationRelativeTo(this);
     }
@@ -134,7 +134,7 @@ public class JanelaCalculaImc extends javax.swing.JFrame {
         peso = Float.parseFloat(txtPeso.getText());
         altura = Float.parseFloat(txtAltura.getText());
 
-        imc = calcula.calculaImc(peso, altura);
+        imc = calcula.calculaImcEspanha(peso, altura);
 
         String resultado = String.valueOf(imc);
 
